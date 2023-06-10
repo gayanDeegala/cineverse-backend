@@ -1,6 +1,7 @@
 import pymysql
 
 from app.database.connection import create_initial_mysql_connection
+from app.database.data.events import events_data
 
 
 def create_database(cursor, database_name):
@@ -20,6 +21,15 @@ def create_events_table(cursor):
     )
     """
     cursor.execute(create_table_query)
+    
+    
+def prepopulate_events_table(cursor):
+    insert_query = """
+    INSERT INTO events (date, show_time, theatre, movie_title, booked_seats)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+
+    cursor.executemany(insert_query, events_data)
 
 
 def create_schema():
@@ -33,6 +43,9 @@ def create_schema():
 
     # Call the function to create the required tables
     create_events_table(cursor)
+
+    # Pre-populate the events table
+    prepopulate_events_table(cursor)
 
     # Commit the changes and close the cursor and connection
     connection.commit()
