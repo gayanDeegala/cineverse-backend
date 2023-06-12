@@ -3,7 +3,9 @@ from pydantic import BaseModel
 from typing import List
 import json
 
+from app.database.booking import get_booked_seats, update_booked_seats
 from app.database.connection import create_mysql_connection
+from app.database.event import event_exists
 
 router = APIRouter()
 
@@ -16,16 +18,10 @@ class Booking(BaseModel):
 # API endpoint to get current bookings for an event
 @router.get('/bookings/{event_id}')
 async def get_bookings(event_id: int):
-    connection = create_mysql_connection()
-    cursor = connection.cursor()
+    booked_seats = get_booked_seats(event_id)
 
-    # Query the database to retrieve the booked seats for the event
-    query = f"SELECT booked_seats FROM events WHERE id = {event_id}"
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    if result:
-        return result[0]  # Return the booked seats as a JSON string
+    if booked_seats is not None:
+        return {"booked_seats": booked_seats}
     else:
         raise HTTPException(status_code=404, detail='Event not found')
 
@@ -33,31 +29,16 @@ async def get_bookings(event_id: int):
 # API endpoint to add bookings for an event
 @router.post('/bookings/{event_id}')
 async def add_bookings(event_id: int, booking: Booking):
-    connection = create_mysql_connection()
-    cursor = connection.cursor()
-
-    # Check if the event exists
-    query = f"SELECT id FROM events WHERE id = {event_id}"
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    if not result:
+    if not event_exists(event_id):
         raise HTTPException(status_code=404, detail='Event not found')
 
-    # Retrieve the existing booked seats for the event from the database
-    query = f"SELECT booked_seats FROM events WHERE id = {event_id}"
-    cursor.execute(query)
-    result = cursor.fetchone()
+    existing_booked_seats = get_booked_seats(event_id)
 
-    if result:
-        existing_booked_seats = json.loads(result[0])  # Convert the JSON string to a list
+    if existing_booked_seats:
         new_booked_seats = existing_booked_seats + booking.seats
     else:
         new_booked_seats = booking.seats
 
-    # Update the booked seats in the database
-    update_query = f"UPDATE events SET booked_seats = '{json.dumps(new_booked_seats)}' WHERE id = {event_id}"
-    cursor.execute(update_query)
-    connection.commit()
+    update_booked_seats(event_id, new_booked_seats)
 
     return {'message': 'Bookings added successfully'}

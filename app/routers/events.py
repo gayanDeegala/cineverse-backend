@@ -2,33 +2,29 @@ from fastapi import APIRouter, HTTPException
 from app.database.connection import create_mysql_connection
 import json
 
+from app.database.event import get_all_events, get_event_info
+
 router = APIRouter()
 
 
 # API endpoint to get all events
 @router.get('/events')
 async def get_events():
-    connection = create_mysql_connection()
-    cursor = connection.cursor()
+    events = get_all_events()
 
-    # Query the database to retrieve all events
-    query = "SELECT * FROM events"
-    cursor.execute(query)
-    result = cursor.fetchall()
-
-    if result:
-        events = []
-        for row in result:
-            event = {
-                'id': row[0],
-                'date': row[1],
-                'show_time': row[2],
-                'theatre': row[3],
-                'movie_title': row[4],
-                'booked_seats': json.loads(row[5])  # Convert the JSON string to a list
-            }
-            events.append(event)
-
+    if events:
         return events
     else:
         raise HTTPException(status_code=404, detail='No events found')
+
+
+@router.get('/events/{date}/{show_time}/{theatre}')
+async def get_event(date: str, show_time: str, theatre: str):
+    event = get_event_info(date, show_time, theatre)
+
+    if event:
+        return event
+    else:
+        raise HTTPException(status_code=404, detail='Event not found')
+
+
