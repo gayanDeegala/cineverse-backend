@@ -1,5 +1,7 @@
 from enum import Enum
 
+from app.database.data.seating import THEATRE_1_SEATING, THEATRE_2_SEATING, THEATRE_3_SEATING
+
 
 class Date(Enum):
     today = 'Today'
@@ -23,13 +25,13 @@ class Theatre(Enum):
     THEATRE_2 = 'Theatre 2'
     THEATRE_3 = 'Theatre 3'
 
-    # def get_seating_arrangement(self):
-    #     if self == Theatre.THEATRE_1:
-    #         return THEATRE_1_SEATING
-    #     elif self == Theatre.THEATRE_2:
-    #         return THEATRE_2_SEATING
-    #     elif self == Theatre.THEATRE_3:
-    #         return THEATRE_3_SEATING
+    def get_seating_arrangement(self):
+        if self == Theatre.THEATRE_1:
+            return THEATRE_1_SEATING
+        elif self == Theatre.THEATRE_2:
+            return THEATRE_2_SEATING
+        elif self == Theatre.THEATRE_3:
+            return THEATRE_3_SEATING
 
 
 class MovieTitle(Enum):
