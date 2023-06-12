@@ -2,7 +2,6 @@ from typing import List
 from app.models.emums import MovieTitle, Date, ShowTime, Theatre
 import json
 
-
 movieTitles: List[MovieTitle] = [
     MovieTitle.SpiderManAcrossTheSpiderVerse,
     MovieTitle.SpiderManAcrossTheSpiderVerse,
@@ -41,7 +40,7 @@ for date in Date:
                 showTime.value,
                 theater_name,
                 movieTitles[i % len(movieTitles)].value,
-                 json.dumps(['A1', 'A2']),
+                json.dumps(['A1', 'A2']),
             )
             events_data.append(event)
             i += 1
