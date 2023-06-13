@@ -2,7 +2,7 @@ from app.database.connection import create_mysql_connection
 import json
 
 
-def get_booked_seats(event_id: int):
+def get_booked_seats_query(event_id: int):
     connection = create_mysql_connection()
     cursor = connection.cursor()
 
@@ -17,7 +17,7 @@ def get_booked_seats(event_id: int):
     return result[0] if result else None
 
 
-def update_booked_seats(event_id: int, seats: list):
+def update_booked_seats_query(event_id: int, seats: list):
     connection = create_mysql_connection()
     cursor = connection.cursor()
 

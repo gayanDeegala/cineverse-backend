@@ -34,13 +34,13 @@ i = 0
 for date in Date:
     for showTime in ShowTime:
         for theatre in Theatre:
-            theater_name = Theatre(theatre).value[0]
+            theater_name = Theatre(theatre).value
             event = (
                 date.value,
                 showTime.value,
                 theater_name,
                 movieTitles[i % len(movieTitles)].value,
-                json.dumps(['A1', 'A2']),
+                json.dumps(['A9', 'A10', 'A8', 'C10']),
             )
             events_data.append(event)
             i += 1

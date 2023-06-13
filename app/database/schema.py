@@ -1,7 +1,9 @@
 import pymysql
 
 from app.database.connection import create_initial_mysql_connection
-from app.database.data.events import events_data
+from app.database.data.events import events_data, movieTitles
+from app.models.emums import Date, ShowTime, Theatre
+import json
 
 
 def create_database(cursor, database_name):
