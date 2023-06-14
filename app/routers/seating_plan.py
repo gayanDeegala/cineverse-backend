@@ -52,5 +52,5 @@ async def get_seating_plan(request: SeatingPlanRequest):
 
     return {
         'event_id': event_id,
-        'seating_plan': []
+        'seating_plan': seating_plan
     }
