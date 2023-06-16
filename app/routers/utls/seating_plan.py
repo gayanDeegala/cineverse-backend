@@ -9,7 +9,7 @@ def generate_seating_plan(theater_seating, booked_seats, headcount, selected_row
         seating_plan_start = center - (headcount // 2)
         if seating_plan_start >= 0:
             seating_plan_end = seating_plan_start + headcount
-            seating_plan = list(range(seating_plan_start, seating_plan_end))
+            seating_plan = [f"{selected_row}{seat_number}" for seat_number in range(seating_plan_start, seating_plan_end)]
             return seating_plan
         else:
             return []
@@ -28,24 +28,24 @@ def generate_seating_plan(theater_seating, booked_seats, headcount, selected_row
         if seats_available_left >= seats_available_right:
             # prioritize left side
             if left_start_seat >= 0:
-                seating_plan = list(range(left_start_seat, left_end_seat + 1))
+                seating_plan = [f"{selected_row}{seat_number}" for seat_number in range(left_start_seat, left_end_seat + 1)]
                 return seating_plan
             else:
                 # can't use single side
-                seating_plan = list(range(0, left_end_seat + 1)) \
-                               + list(range(right_start_seat, right_start_seat + abs(left_start_seat)))
+                seating_plan = [f"{selected_row}{seat_number}" for seat_number in range(0, left_end_seat + 1)] \
+                               + [f"{selected_row}{seat_number}" for seat_number in range(right_start_seat, right_start_seat + abs(left_start_seat))]
                 return seating_plan
 
         if seats_available_left < seats_available_right:
             # prioritize right side
             if right_end_seat < total_seats_in_row:
-                seating_plan = list(range(right_start_seat, right_end_seat + 1))
+                seating_plan = [f"{selected_row}{seat_number}" for seat_number in range(right_start_seat, right_end_seat + 1)]
                 return seating_plan
             else:
                 # can't use single side
                 new_left_start_seat = left_end_seat - (right_end_seat - total_seats_in_row)
-                seating_plan = list(range(new_left_start_seat, left_end_seat + 1)) \
-                               + list(range(right_start_seat, total_seats_in_row + 1))
+                seating_plan = [f"{selected_row}{seat_number}" for seat_number in range(new_left_start_seat, left_end_seat + 1)] \
+                               + [f"{selected_row}{seat_number}" for seat_number in range(right_start_seat, total_seats_in_row + 1)]
                 return seating_plan
 
     return []
